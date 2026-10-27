@@ -65,4 +65,4 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 
 ## AI Acknowledgements
 
-I used an AI assistant (Kiro) to help set up and structure this portfolio homepage. Its contributions were limited to organizing the page layout, drafting navigation and the course-progress table, and helping phrase the About Me and What I Hope to Learn sections based on background, interests, and goals that I provided. All biographical facts, learning objectives, and course information are my own, and I reviewed and edited the generated text before publishing. Individual assignment pages include their own AI acknowledgements where applicable, in accordance with the course policy.
+I used an AI assistant (Kiro) to help set up and structure this portfolio homepage. Its contributions were limited to organizing the page layout, drafting navigation and the course-progress table, and helping phrase the About Me and What I Hope to Learn sections based on background, interests, and goals that I provided.
