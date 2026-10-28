@@ -65,4 +65,4 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 
 ## AI Acknowledgements
 
-I used an AI assistant (Kiro) to help set up and structure this portfolio homepage. Its contributions were limited to organizing the page layout, drafting navigation and the course-progress table, and helping phrase the About Me and What I Hope to Learn sections based on background, interests, and goals that I provided.
+I used ChatGpt to help set up and structure this portfolio homepage. Its contributions were limited to organizing the page layout, drafting navigation and the course-progress table, and helping phrase the About Me and What I Hope to Learn sections based on background, interests, and goals that I provided.
