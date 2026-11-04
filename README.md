@@ -26,7 +26,7 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 
 ### Data Visualization Examples
 
-- [Data Visualization Examples](dataviz-examples) — a collection of visualizations from the course, with sources and explanations. *To Be Updated.*
+- [Data Visualization Examples](dataviz-examples) — interactive Tableau visualizations of OECD government debt (2007–2024): a 2023 filled map and a debt-to-GDP highlight table, with sources and commentary.
 
 ### Data Visualization Critiques
 
@@ -50,7 +50,7 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 
 | Assignment | Description | Status | Link |
 |------------|-------------|--------|------|
-| Data Visualization Examples | Curated visualizations with sources and commentary | Upcoming | [View](dataviz-examples) |
+| Data Visualization Examples | OECD government debt: interactive 2023 map and debt-to-GDP highlight table | In Progress | [View](dataviz-examples) |
 | Critique #1 | First visualization critique | Upcoming | [View](critique-1) |
 | Critique by Design | Critique, sketch, and redesign a visualization | Upcoming | [View](critique-by-design) |
 | Workshop — Week 1 | Controlling Color | Upcoming | [View](workshop-week-1) |
