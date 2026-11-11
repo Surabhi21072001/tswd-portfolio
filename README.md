@@ -31,6 +31,7 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 ### Data Visualization Critiques
 
 - [Critique #1](critique-1) — my first visualization critique. *Coming Soon.*
+- [High Street Coffee Caffeine Redesign](high-street-coffee-caffeine-redesign) — Makeover Monday 2023 Week 9 critique and interactive Tableau redesign.
 - [Critique by Design](critique-by-design) — the critique-and-redesign assignment template. *To Be Updated.*
 
 ### Workshops and Sketching Exercises
