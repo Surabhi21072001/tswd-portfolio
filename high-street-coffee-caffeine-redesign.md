@@ -122,7 +122,7 @@ The redesign changes the original from a reference table into a comparison and e
 
 ## AI Use Disclosure
 
-I used ChatGPT to help interpret the assignment requirements, organize my critique, refine user-testing questions, troubleshoot Tableau implementation, and improve the clarity of my written explanations. I independently selected the visualization, evaluated the original design, conducted user testing, made the final design decisions, and verified the finished Tableau dashboard.
+I used ChatGPT only to help troubleshoot Tableau errors.
 
 [&larr; Back to main portfolio](./#portfolio)
 
