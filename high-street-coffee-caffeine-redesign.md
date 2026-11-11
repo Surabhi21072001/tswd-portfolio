@@ -48,8 +48,8 @@ My initial design replaced the static matrix with an interactive horizontal bar 
 
 I tested the prototype with two participants:
 
-- Participant 1: Graduate student and regular coffee consumer
-- Participant 2: Graduate student familiar with data visualization
+- Participant 1: Graduate student in the MISM program and regular coffee consumer
+- Participant 2: Graduate student in the MSPPM-DA program, familiar with data visualization
 
 Findings:
 
