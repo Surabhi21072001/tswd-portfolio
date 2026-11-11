@@ -10,7 +10,6 @@ External links on this page open in a new tab.
 
 ## Original Visualization
 
-<!-- PLACEHOLDER: add a screenshot of the original visualization at images/coffee-original-visualization.png -->
 <a href="https://makeovermonday.vercel.app/dataset/2023w9" target="_blank" rel="noopener noreferrer">
   <img src="images/coffee-original-visualization.png" alt="The original High Street Coffee Caffeine Content Compared visualization: a white-lined table on a bright blue background listing caffeine content in mg and drink size in ml for single-shot espresso, cappuccino, and filter/brewed coffee at Caffè Nero, Costa, Greggs, Pret, and Starbucks, with three coffee cup illustrations beside the title." style="max-width: 100%; height: auto;" />
 </a>
@@ -38,7 +37,7 @@ Compared with the Good Charts method, Stephen Few's profile is more structured a
 ## Sketch and Initial Design
 
 <a href="https://public.tableau.com/app/profile/surabhi.byju/viz/CaffeinebyChain/Dashboard1" target="_blank" rel="noopener noreferrer">
-  <img src="images/coffee-initial-prototype.png" alt="Initial Tableau prototype: a horizontal bar chart titled Caffeine content of Cappuccino across coffee chains, ranking Costa at 325 mg down to Starbucks at 66 mg, with a product selector and highlighted highest and lowest values." style="max-width: 100%; height: auto;" />
+  <img src="images/coffee-initial-prototype.png" alt="Initial Tableau prototype: a horizontal bar chart titled Caffeine content of Cappuccino across coffee chains. Bars run from Costa at 325 mg, highlighted in blue, down to Starbucks at 66 mg, highlighted in orange, with a Select Product control for cappuccino, single-shot espresso, and filter/brewed coffee." style="max-width: 100%; height: auto;" />
 </a>
 
 My initial design replaced the static matrix with an interactive horizontal bar chart. Users could select a coffee type, compare chains using bar length, and see the chains ranked from highest to lowest caffeine content. The highest value was highlighted, while serving-size information remained available through tooltips.
@@ -83,7 +82,7 @@ Findings:
 <div class='tableauPlaceholder' id='viz-caffeine-final' style='position: relative; width: 100%; max-width: 1000px; margin: 0 auto;'>
   <noscript>
     <a href='https://public.tableau.com/app/profile/surabhi.byju/viz/CaffeinebyChain/FinalRedesign' target='_blank' rel='noopener noreferrer'>
-      <img alt='Final redesign: an interactive bar chart comparing caffeine content by coffee chain.' src='https://public.tableau.com/static/images/Ca/CaffeinebyChain/FinalRedesign/1_rss.png' style='border: none; max-width: 100%; height: auto;' />
+      <img alt='Final redesign: a horizontal bar chart titled Compare caffeine content by Cappuccino. Costa at 325 mg is highlighted in brown and Starbucks at 66 mg in teal, with a Choose a coffee type control and a 0 to 400 mg scale.' src='images/coffee-final-redesign.png' style='border: none; max-width: 100%; height: auto;' />
     </a>
   </noscript>
   <object class='tableauViz' style='display:none;'>
