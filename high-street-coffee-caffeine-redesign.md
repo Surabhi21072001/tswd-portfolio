@@ -68,9 +68,9 @@ Findings:
 | Feedback | Change made |
 |---|---|
 | The product selector was useful | Retained the interactive selector |
-| Brown suited the coffee subject | Retained brown for the highest-caffeine value |
-| The highest value needed stronger emphasis | Kept a distinct dark-brown highlight and visible value label |
-| The lowest value should also stand out | Added teal highlighting for the lowest-caffeine value |
+| A coffee-themed brown palette was recommended | Replaced the prototype’s blue highlight with brown for the highest-caffeine value |
+| The highest value needed stronger emphasis | Used a distinct dark-brown bar and visible value label |
+| The lowest value should also stand out | Replaced the prototype’s orange highlight with teal to distinguish the lowest value |
 | The title appeared limited to cappuccino | Added a dynamic title that updates with the selected product |
 | "Ranked highest to lowest" was redundant | Removed the phrase from the subtitle |
 | The interaction needed clearer instructions | Renamed the control "Choose a coffee type" and added a short instruction |
@@ -79,7 +79,8 @@ Findings:
 
 ## Final Redesign
 
-<div class='tableauPlaceholder' id='viz-caffeine-final' style='position: relative; width: 100%; max-width: 1000px; margin: 0 auto;'>
+<div id='viz-caffeine-fit' style='width: 100%; max-width: 1100px; margin: 0 auto; overflow: hidden;'>
+<div class='tableauPlaceholder' id='viz-caffeine-final' data-viz-width='1100' data-viz-height='800' style='position: relative; width: 1100px; height: 800px; transform-origin: top left;'>
   <noscript>
     <a href='https://public.tableau.com/app/profile/surabhi.byju/viz/CaffeinebyChain/FinalRedesign' target='_blank' rel='noopener noreferrer'>
       <img alt='Final redesign: a horizontal bar chart titled Compare caffeine content by Cappuccino. Costa at 325 mg is highlighted in brown and Starbucks at 66 mg in teal, with a Choose a coffee type control and a 0 to 400 mg scale.' src='images/coffee-final-redesign.png' style='border: none; max-width: 100%; height: auto;' />
@@ -100,6 +101,7 @@ Findings:
     <param name='display_count' value='yes' />
     <param name='language' value='en-US' />
   </object>
+</div>
 </div>
 
 <p style="text-align: center;">
@@ -127,14 +129,26 @@ I used ChatGPT only to help troubleshoot Tableau errors.
 [&larr; Back to main portfolio](./#portfolio)
 
 <script type='text/javascript'>
-  var divElements = document.getElementsByClassName('tableauPlaceholder');
-  for (var i = 0; i < divElements.length; i++) {
-    var divElement = divElements[i];
-    var vizElement = divElement.getElementsByTagName('object')[0];
-    vizElement.style.width = '100%';
-    vizElement.style.height = (divElement.offsetWidth * 0.7) + 'px';
-    var scriptElement = document.createElement('script');
-    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
-    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+  // The final dashboard is published at a fixed 1100 x 800 size. Render it at that
+  // native size, then scale the whole embed down to fit the available width so
+  // nothing is clipped on tablets or phones.
+  var vizDiv = document.getElementById('viz-caffeine-final');
+  var vizFit = document.getElementById('viz-caffeine-fit');
+  var vizW = parseInt(vizDiv.getAttribute('data-viz-width'), 10);
+  var vizH = parseInt(vizDiv.getAttribute('data-viz-height'), 10);
+  var vizObject = vizDiv.getElementsByTagName('object')[0];
+  vizObject.style.width = vizW + 'px';
+  vizObject.style.height = vizH + 'px';
+
+  function fitTableau() {
+    var scale = Math.min(1, vizFit.clientWidth / vizW);
+    vizDiv.style.transform = 'scale(' + scale + ')';
+    vizFit.style.height = (vizH * scale) + 'px';
   }
+  fitTableau();
+  window.addEventListener('resize', fitTableau);
+
+  var vizScript = document.createElement('script');
+  vizScript.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+  vizObject.parentNode.insertBefore(vizScript, vizObject);
 </script>
