@@ -105,7 +105,7 @@ This initial Tableau prototype compares the number of scheduled passenger flight
 
 _Initial Tableau prototype, not a final visualization._
 
-<div id="viz-gateway-balance" style="width: 100%; max-width: 1100px; height: 420px; min-height: 340px; margin: 0 auto; overflow: hidden;">
+<div id="viz-gateway-balance" style="width: 100%; max-width: 1100px; height: 620px; min-height: 520px; margin: 0 auto; overflow: hidden;">
   <iframe title="Initial Tableau prototype: scatterplot comparing flights from India to each of five U.S. gateways on the horizontal axis with flights from each gateway to Pittsburgh on the vertical axis, with reference lines showing the average service levels." src="https://public.tableau.com/views/FinalProject-sheet3_17950200670440/GatewayBalance?:showVizHome=no&amp;:embed=true" width="100%" height="100%" style="border: 0; display: block; width: 100%; height: 100%;" loading="lazy" allowfullscreen></iframe>
 </div>
 
