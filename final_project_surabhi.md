@@ -4,7 +4,7 @@
 
 # Final Project Part I
 
-**Status: In progress.** The sketch images are placeholders that I will replace as they become available.
+**Status: In progress.** 
 
 ## Which U.S. Gateway Best Connects India to Pittsburgh?
 
@@ -208,7 +208,7 @@ U.S. Department of Transportation, Bureau of Transportation Statistics. *T-100 S
 
 ## AI acknowledgements
 
-I used ChatGPT to help refine the project topic, evaluate the suitability of the dataset, and develop the preliminary story structure. I used Kiro to help implement and check the Markdown page structure and navigation. I reviewed and revised all generated material and remain responsible for the final analysis, design, and conclusions.
+I used ChatGPT to help refine the project topic, evaluate the suitability of the dataset, and develop the preliminary story structure. 
 
 ---
 
