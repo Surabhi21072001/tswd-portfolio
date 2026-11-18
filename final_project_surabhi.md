@@ -4,7 +4,7 @@
 
 # Final Project Part I
 
-**Status: In progress.** 
+**Status: Part I complete.** 
 
 ## Which U.S. Gateway Best Connects India to Pittsburgh?
 
@@ -39,7 +39,7 @@ This project will compare major gateways using 2025 flight-segment data from the
 ## Project Structure and Story Arc
 
 1. **Opening: the traveler's problem**
-    - Pittsburgh does not currently have nonstop service from India.
+    - The 2025 T-100 dataset contains no nonstop passenger service between India and Pittsburgh.
     - Travelers must connect through another U.S. airport.
     - The selected gateway affects the number of potential onward options.
 
@@ -65,7 +65,7 @@ This project will compare major gateways using 2025 flight-segment data from the
 
 ## Initial Sketches
 
-The sketches below are planned views for the story. Each placeholder will be replaced with an exported sketch image.
+The visualizations below are initial Tableau prototypes that demonstrate the proposed charts and story structure. They will be refined based on feedback before the final project.
 
 <!-- To add sketch images: save the exported files in images/final-project/ using the filenames listed under each sketch, then replace the placeholder text with an image reference such as ![descriptive alt text](images/final-project/sketch-1-journey-introduction.png). Do not add the image reference until the file exists, so the published page has no broken images. -->
 
