@@ -43,6 +43,7 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 
 ### Final Project
 
+- [Final Project Part I — Which U.S. Gateway Best Connects India to Pittsburgh?](final_project_surabhi) — project outline, data plan, and planned sketches. *In progress; sketches to be added.*
 - [Final Project — Part I: Proposal and Data](final-project-part-one) — *To Be Updated.*
 - [Final Project — Part II: Sketches, Wireframes, and User Feedback](final-project-part-two) — *To Be Updated.*
 - [Final Project — Part III: Final Data Story and Presentation](final-project-part-three) — *To Be Updated.*
@@ -58,7 +59,7 @@ This section grows as I complete coursework. Links lead to the relevant pages; i
 | Workshop — Week 2 | Crafting for Clarity | Upcoming | [View](workshop-week-2) |
 | Workshop — Week 4 | Choosing Chart Types | Upcoming | [View](workshop-week-4) |
 | Workshop — Week 5 | Practicing Persuasion | Upcoming | [View](workshop-week-5) |
-| Final Project — Part I | Proposal and data | Upcoming | [View](final-project-part-one) |
+| Final Project — Part I | Proposal and data | In Progress | [View](final_project_surabhi) |
 | Final Project — Part II | Sketches, wireframes, and user feedback | Upcoming | [View](final-project-part-two) |
 | Final Project — Part III | Final data story and presentation | Upcoming | [View](final-project-part-three) |
 
