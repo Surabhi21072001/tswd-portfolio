@@ -85,13 +85,21 @@ This initial Tableau prototype compares the number of scheduled passenger flight
 
 **Intended takeaway:** The gateway receiving the most flights from India is not automatically the gateway offering the strongest complete connection to Pittsburgh.
 
-### Sketch 2: Two-leg gateway comparison
+### Prototype 2: Which Gateways Provide the Most Onward Flights to Pittsburgh?
 
-> **Placeholder:** sketch image to be added (`images/final-project/sketch-2-two-leg-comparison.png`).
+_Initial Tableau prototype, not a final visualization._
 
-- **Comparison:** India-to-gateway flights compared with gateway-to-Pittsburgh flights.
-- **Suggested form:** Paired bars or two aligned bar-chart panels.
-- **Intended takeaway:** A gateway may perform strongly on one leg but not the other.
+<div id="viz-gateways-to-pittsburgh" style="width: 100%; max-width: 1100px; height: 420px; min-height: 340px; margin: 0 auto; overflow: hidden;">
+  <iframe title="Initial Tableau prototype: bar chart of scheduled passenger flights performed from five U.S. gateways to Pittsburgh in 2025, with Chicago-O'Hare highest." src="https://public.tableau.com/views/FinalProject-sheet2_17950182342380/U_S_GatewaystoPittsburgh?:showVizHome=no&amp;:embed=true" width="100%" height="100%" style="border: 0; display: block; width: 100%; height: 100%;" loading="lazy" allowfullscreen></iframe>
+</div>
+
+<p style="text-align: center;">
+  <a href="https://public.tableau.com/app/profile/surabhi.byju/viz/FinalProject-sheet2_17950182342380/U_S_GatewaystoPittsburgh?publish=yes" target="_blank" rel="noopener noreferrer">Open Prototype 2 on Tableau Public</a>
+</p>
+
+This initial Tableau prototype compares the number of scheduled passenger flights performed from five U.S. gateways to Pittsburgh in 2025. Chicago–O’Hare provided the most onward flights to Pittsburgh, followed by Newark and New York–JFK. This differs from the first visualization, where JFK received the most flights from India.
+
+**Intended takeaway:** The airport receiving the most flights from India is not the same airport providing the most onward flights to Pittsburgh. Travelers therefore need to consider both parts of the journey.
 
 ### Prototype 3: Which Gateway Offers the Strongest Balance?
 
@@ -111,15 +119,21 @@ This scatterplot compares both parts of the journey simultaneously. The horizont
 
 The visualization measures potential flight connectivity rather than actual passenger connections. It does not show whether passengers arriving from India continued to Pittsburgh.
 
-### Sketch 4: Seasonal availability
+### Prototype 4: How Consistent Is India Service Across the Year?
 
-> **Placeholder:** sketch image to be added (`images/final-project/sketch-4-seasonal-availability.png`).
+_Initial Tableau prototype, not a final visualization._
 
-- **Suggested chart:** Heatmap.
-- **Rows:** Gateway airports.
-- **Columns:** Months.
-- **Color:** Number of India-to-gateway flights.
-- **Intended takeaway:** Some gateways offer consistent year-round service while others have limited or seasonal service.
+<div id="viz-monthly-india-service" style="width: 100%; max-width: 1100px; height: 420px; min-height: 340px; margin: 0 auto; overflow: hidden;">
+  <iframe title="Initial Tableau prototype: heatmap of monthly flights performed from India to five U.S. gateways in 2025. New York-JFK, San Francisco, and Newark have service in every month, while Chicago-O'Hare and Washington-Dulles have months without service." src="https://public.tableau.com/views/FinalProject-sheet4_17950338217190/MonthlyIndiaService?:showVizHome=no&amp;:embed=true" width="100%" height="100%" style="border: 0; display: block; width: 100%; height: 100%;" loading="lazy" allowfullscreen></iframe>
+</div>
+
+<p style="text-align: center;">
+  <a href="https://public.tableau.com/app/profile/surabhi.byju/viz/FinalProject-sheet4_17950338217190/MonthlyIndiaService?publish=yes" target="_blank" rel="noopener noreferrer">Open Prototype 4 on Tableau Public</a>
+</p>
+
+This initial Tableau prototype is a heatmap of the number of scheduled passenger flights performed from India to each of the five gateways in every month of 2025, with darker cells indicating more flights. JFK, San Francisco, and Newark received India service in all twelve months. Chicago–O’Hare had no India service in June and July, and Washington–Dulles had service in only six months.
+
+**Intended takeaway:** Some gateways offer consistent year-round service while others have limited or seasonal service.
 
 ## The Data
 
