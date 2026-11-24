@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gateway Balance — Connected Dot Plot</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root{--ink:#17202a;--muted:#66717d;--grid:#e4e8ed;--india:#c41230;--pgh:#2368c4;--accent:#6d3fc0;--wash:#f7f8fa}
+    *{box-sizing:border-box}html,body{margin:0;background:transparent;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .card{max-width:980px;margin:auto;padding:24px 26px 18px;background:#fff}
+    h1{margin:0;font-size:clamp(24px,4vw,38px);line-height:1.08;letter-spacing:-.025em}.dek{max-width:780px;margin:10px 0 0;color:var(--muted);font-size:15px;line-height:1.45}
+    .controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin-top:20px}.control{min-width:190px;flex:0 1 230px}label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.045em;text-transform:uppercase}
+    select{width:100%;padding:9px 34px 9px 11px;border:1px solid #c9ced5;border-radius:7px;background:#fff;color:var(--ink);font:inherit;font-weight:650;cursor:pointer}
+    .legend{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-left:auto;padding-bottom:8px;color:var(--muted);font-size:13px}.key{display:inline-flex;align-items:center;gap:7px}.dot{width:11px;height:11px;border-radius:50%}.india{background:var(--india)}.pgh{background:var(--pgh)}
+    .chart-wrap{width:100%;overflow:hidden;margin-top:8px}svg{display:block;width:100%;height:auto;overflow:visible}.axis text{fill:var(--muted);font-size:12px}.axis path{display:none}.axis line{stroke:var(--grid)}.row-label{fill:var(--ink);font-size:14px;font-weight:650}.connector{stroke:#aeb6c1;stroke-width:5;stroke-linecap:round}.mark{stroke:#fff;stroke-width:2;cursor:pointer}.value{font-size:12px;font-weight:750;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}.row-hit{fill:transparent;cursor:pointer}.row.is-muted{opacity:.18}.row.is-focus .connector{stroke:var(--accent);stroke-width:7}.row.is-focus .row-label{fill:var(--accent);font-weight:800}
+    .summary{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:start;margin:2px 0 0;padding:14px 16px;border-radius:9px;background:var(--wash);font-size:13px;line-height:1.45}.badge{padding:4px 9px;border-radius:999px;background:#eee7fb;color:#5932a5;font-weight:800;white-space:nowrap}.summary strong{color:var(--ink)}
+    .source{margin:12px 0 0;color:#7a828c;font-size:11px;line-height:1.4}
+    .tip{position:fixed;z-index:10;pointer-events:none;opacity:0;max-width:220px;padding:9px 11px;border-radius:7px;background:#17202a;color:#fff;font-size:12px;line-height:1.4;box-shadow:0 8px 24px #0002;transition:opacity .12s}.tip strong{display:block;margin-bottom:3px}
+    @media(max-width:650px){.card{padding:18px 14px 14px}.controls{align-items:stretch}.control{min-width:0;flex:1 1 100%}.legend{margin-left:0;padding:0}.summary{grid-template-columns:1fr}.row-label{font-size:12px}.value{font-size:11px}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Which gateway offers the strongest balance?</h1>
+    <p class="dek">Each gateway’s two legs are shown on a common 0–100 strength scale. A shorter connector means the gateway performs more evenly; a position farther right means both legs are stronger.</p>
+    <div class="controls">
+      <div class="control"><label for="sort">Rank gateways by</label><select id="sort"><option value="balance">Balanced strength</option><option value="india">India service</option><option value="pgh">Pittsburgh service</option><option value="alpha">Gateway name</option></select></div>
+      <div class="control"><label for="focus">Highlight gateway</label><select id="focus"><option value="all">All gateways</option></select></div>
+      <div class="legend" aria-label="Legend"><span class="key"><span class="dot india"></span>India service</span><span class="key"><span class="dot pgh"></span>Pittsburgh service</span></div>
+    </div>
+    <div class="chart-wrap" id="chart"></div>
+    <div class="summary" aria-live="polite"><span class="badge" id="badge">Strongest balance</span><span id="insight"></span></div>
+    <p class="source">Source: U.S. DOT BTS T-100 Segment (All Carriers), 2025. Strength scores normalize each leg against the leading gateway; balanced strength is the lower of the two scores.</p>
+  </main>
+  <div class="tip" id="tip"></div>
+<script>
+const data=[
+ {name:"New York–JFK",india:1028,pgh:2047},
+ {name:"San Francisco",india:804,pgh:580},
+ {name:"Newark",india:727,pgh:2269},
+ {name:"Chicago–O'Hare",india:231,pgh:3690},
+ {name:"Washington–Dulles",india:109,pgh:1479}
+];
+const maxIndia=d3.max(data,d=>d.india),maxPgh=d3.max(data,d=>d.pgh);
+data.forEach(d=>{d.indiaScore=d.india/maxIndia*100;d.pghScore=d.pgh/maxPgh*100;d.balance=Math.min(d.indiaScore,d.pghScore)});
+const fmt=d3.format(",");
+const focus=d3.select("#focus");focus.selectAll("option.gateway").data(data).join("option").attr("class","gateway").attr("value",d=>d.name).text(d=>d.name);
+const W=920,H=390,M={top:36,right:42,bottom:48,left:176},innerW=W-M.left-M.right,innerH=H-M.top-M.bottom;
+const svg=d3.select("#chart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","title desc");
+svg.append("title").attr("id","title").text("Connected dot plot comparing India and Pittsburgh service strength by gateway");svg.append("desc").attr("id","desc").text("Newark has the strongest weaker leg and therefore the strongest balance across both parts of the journey.");
+const g=svg.append("g").attr("transform",`translate(${M.left},${M.top})`),x=d3.scaleLinear().domain([0,100]).range([0,innerW]),y=d3.scaleBand().range([0,innerH]).padding(.38);
+const axis=g.append("g").attr("class","axis").attr("transform",`translate(0,${innerH})`);const rows=g.append("g");const tip=d3.select("#tip");let sort="balance",selected="all";
+function order(){return data.slice().sort((a,b)=>sort==="alpha"?d3.ascending(a.name,b.name):d3.descending(a[sort],b[sort]));}
+function showTip(event,d,leg){const raw=leg==="india"?d.india:d.pgh,score=leg==="india"?d.indiaScore:d.pghScore;tip.html(`<strong>${d.name}</strong>${leg==="india"?"India departures":"Pittsburgh departures"}: ${fmt(raw)}<br>Relative strength: ${Math.round(score)}/100`).style("left",`${event.clientX+12}px`).style("top",`${event.clientY-18}px`).style("opacity",1)}
+function insight(){const d=selected==="all"?data.find(d=>d.name==="Newark"):data.find(d=>d.name===selected);d3.select("#badge").text(selected==="all"?"Strongest balance":d.name);const msg=selected==="all"?`<strong>Newark has the strongest balance.</strong> Its weaker leg scores ${Math.round(d.balance)}/100—higher than the weakest leg of every other gateway.`:`<strong>${d.name}</strong> records ${fmt(d.india)} India departures and ${fmt(d.pgh)} Pittsburgh departures. Its weaker leg scores ${Math.round(d.balance)}/100.`;d3.select("#insight").html(msg)}
+function update(){const ordered=order();y.domain(ordered.map(d=>d.name));const t=svg.transition().duration(650).ease(d3.easeCubicOut);axis.transition(t).call(d3.axisBottom(x).ticks(5).tickFormat(d=>d).tickSize(-innerH).tickPadding(10));axis.selectAll(".tick").filter(d=>d===0).remove();
+ const row=rows.selectAll("g.row").data(ordered,d=>d.name).join(enter=>{const r=enter.append("g").attr("class","row").attr("transform",d=>`translate(0,${y(d.name)+y.bandwidth()/2})`).style("opacity",0);r.append("rect").attr("class","row-hit").attr("x",-M.left).attr("y",-25).attr("width",W-M.right).attr("height",50).on("click",(_,d)=>{selected=selected===d.name?"all":d.name;focus.property("value",selected);update()});r.append("text").attr("class","row-label").attr("x",-14).attr("text-anchor","end").attr("dy",".35em").text(d=>d.name);r.append("line").attr("class","connector").attr("x1",d=>x(d.indiaScore)).attr("x2",d=>x(d.pghScore));r.append("circle").attr("class","mark india-mark").attr("r",8).attr("fill","var(--india)").attr("cx",d=>x(d.indiaScore)).on("pointermove",(e,d)=>showTip(e,d,"india")).on("pointerleave",()=>tip.style("opacity",0));r.append("circle").attr("class","mark pgh-mark").attr("r",8).attr("fill","var(--pgh)").attr("cx",d=>x(d.pghScore)).on("pointermove",(e,d)=>showTip(e,d,"pgh")).on("pointerleave",()=>tip.style("opacity",0));r.append("text").attr("class","value india-value").attr("fill","var(--india)").attr("text-anchor","middle").attr("y",-13).attr("x",d=>x(d.indiaScore)).text(d=>Math.round(d.indiaScore));r.append("text").attr("class","value pgh-value").attr("fill","var(--pgh)").attr("text-anchor","middle").attr("y",22).attr("x",d=>x(d.pghScore)).text(d=>Math.round(d.pghScore));return r.call(r=>r.transition(t).style("opacity",1))},update=>update,exit=>exit.remove());
+ row.transition(t).attr("transform",d=>`translate(0,${y(d.name)+y.bandwidth()/2})`);row.classed("is-focus",d=>selected===d.name).classed("is-muted",d=>selected!=="all"&&selected!==d.name);insight()}
+d3.select("#sort").on("change",e=>{sort=e.target.value;update()});focus.on("change",e=>{selected=e.target.value;update()});update();
+function reportHeight(){const height=document.documentElement.scrollHeight;parent.postMessage({type:"shorthand:resize",height},"*");parent.postMessage({type:"embed-size",height},"*")}new ResizeObserver(reportHeight).observe(document.body);addEventListener("load",reportHeight);
+</script>
+</body>
+</html>
