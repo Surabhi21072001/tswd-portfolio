@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CMU Gateway Explorer - India Service by Month</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5d6773;
+      --grid: #e6e9ed;
+      --cmu-red: #c41230;
+      --bar: #2f6fce;
+      --bar-highlight: #c41230;
+      --surface: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: transparent; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .card { width: 100%; max-width: 980px; margin: 0 auto; padding: 24px 26px 18px; background: var(--surface); }
+    .header { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: end; }
+    h1 { margin: 0; max-width: 720px; font-size: clamp(24px, 4vw, 38px); line-height: 1.08; letter-spacing: -0.025em; }
+    .dek { margin: 10px 0 0; max-width: 720px; color: var(--muted); font-size: 15px; line-height: 1.45; }
+    label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    select { min-width: 132px; padding: 9px 34px 9px 11px; border: 1px solid #c9ced5; border-radius: 7px; background: white; color: var(--ink); font: inherit; font-weight: 650; cursor: pointer; }
+    .context { display: flex; align-items: center; gap: 9px; min-height: 24px; margin-top: 18px; color: var(--muted); font-size: 13px; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px; background: #fbe9ed; color: #9d0e27; font-weight: 750; white-space: nowrap; }
+    .chart-wrap { margin-top: 8px; width: 100%; overflow: hidden; }
+    svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .axis text { fill: var(--muted); font-size: 12px; }
+    .axis path { display: none; }
+    .axis line { stroke: var(--grid); }
+    .gateway-label { fill: var(--ink); font-size: 14px; font-weight: 650; }
+    .value-label { fill: var(--ink); font-size: 13px; font-weight: 760; }
+    .bar { fill: var(--bar); }
+    .bar.top { fill: var(--bar-highlight); }
+    .source { margin: 10px 0 0; color: #7a828c; font-size: 11px; line-height: 1.4; }
+    @media (max-width: 620px) {
+      .card { padding: 18px 14px 14px; }
+      .header { grid-template-columns: 1fr; align-items: start; }
+      .control { width: 100%; }
+      select { width: 100%; }
+      .context { align-items: flex-start; flex-direction: column; gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="header">
+      <div>
+        <h1>Which gateway is strongest during your CMU travel month?</h1>
+        <p class="dek">Select a month to compare scheduled India-to-U.S. gateway departures. Bars reorder automatically.</p>
+      </div>
+      <div class="control">
+        <label for="month">Travel month</label>
+        <select id="month" aria-label="Select travel month"></select>
+      </div>
+    </div>
+    <div class="context" aria-live="polite">
+      <span class="badge" id="badge"></span>
+      <span id="calendar-note"></span>
+    </div>
+    <div class="chart-wrap" id="chart"></div>
+    <p class="source">Flight data: U.S. DOT BTS T-100 Segment, 2025. Academic periods: Heinz College 2026-27 calendar.</p>
+  </main>
+
+  <script>
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const gateways = ["New York-JFK", "San Francisco", "Newark", "Chicago-O'Hare", "Washington-Dulles"];
+    const values = {
+      Jan: [92, 75, 67, 31, 18], Feb: [85, 71, 61, 29, 17], Mar: [93, 75, 66, 31, 18],
+      Apr: [92, 73, 62, 30, 22], May: [84, 76, 49, 29, 20], Jun: [86, 62, 58, 0, 0],
+      Jul: [87, 61, 62, 0, 0], Aug: [84, 64, 62, 18, 14], Sep: [80, 61, 60, 13, 0],
+      Oct: [84, 65, 62, 15, 0], Nov: [80, 59, 58, 17, 0], Dec: [81, 62, 60, 18, 0]
+    };
+    const cmuContext = {
+      Jan: ["Spring return", "Spring classes begin January 19."],
+      Mar: ["Spring break", "No classes March 8-12."],
+      May: ["Summer departure", "Spring final exams end May 7."],
+      Aug: ["Fall arrival", "Orientation is August 19; fall classes begin August 24."],
+      Dec: ["Winter departure", "Fall classes end December 4; final exams end December 11."]
+    };
+
+    const select = d3.select("#month");
+    select.selectAll("option").data(months).join("option").attr("value", d => d).text(d => d);
+    select.property("value", "Aug").on("change", event => update(event.target.value));
+
+    const container = d3.select("#chart");
+    const width = 920;
+    const height = 390;
+    const margin = { top: 18, right: 58, bottom: 42, left: 176 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const svg = container.append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("role", "img")
+      .attr("aria-labelledby", "chart-title chart-desc");
+    svg.append("title").attr("id", "chart-title").text("Monthly India departures by U.S. gateway");
+    svg.append("desc").attr("id", "chart-desc").text("An interactive horizontal bar chart ranking five gateways by departures from India.");
+
+    const plot = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear().domain([0, 100]).range([0, innerWidth]);
+    const y = d3.scaleBand().range([0, innerHeight]).padding(0.26);
+    const xAxis = plot.append("g").attr("class", "axis").attr("transform", `translate(0,${innerHeight})`);
+    const bars = plot.append("g");
+    const names = plot.append("g");
+    const labels = plot.append("g");
+
+    function dataFor(month) {
+      return gateways.map((gateway, i) => ({ gateway, value: values[month][i] })).sort((a, b) => d3.descending(a.value, b.value));
+    }
+
+    function update(month) {
+      const data = dataFor(month);
+      y.domain(data.map(d => d.gateway));
+      const t = svg.transition().duration(650).ease(d3.easeCubicOut);
+
+      xAxis.transition(t).call(d3.axisBottom(x).ticks(5).tickSize(-innerHeight).tickPadding(9));
+
+      bars.selectAll("rect").data(data, d => d.gateway).join(
+        enter => enter.append("rect").attr("class", "bar").attr("x", 0).attr("y", d => y(d.gateway)).attr("height", y.bandwidth()).attr("width", 0)
+          .call(enter => enter.transition(t).attr("width", d => x(d.value))),
+        update => update.call(update => update.transition(t).attr("y", d => y(d.gateway)).attr("height", y.bandwidth()).attr("width", d => x(d.value))),
+        exit => exit.transition(t).attr("width", 0).remove()
+      ).classed("top", (d, i) => i === 0);
+
+      names.selectAll("text").data(data, d => d.gateway).join("text")
+        .attr("class", "gateway-label").attr("text-anchor", "end").attr("x", -12).attr("dy", "0.35em").text(d => d.gateway)
+        .transition(t).attr("y", d => y(d.gateway) + y.bandwidth() / 2);
+
+      labels.selectAll("text").data(data, d => d.gateway).join("text")
+        .attr("class", "value-label").attr("x", d => x(d.value) + 9).attr("dy", "0.35em").text(d => d.value)
+        .transition(t).attr("x", d => x(d.value) + 9).attr("y", d => y(d.gateway) + y.bandwidth() / 2);
+
+      const context = cmuContext[month];
+      d3.select("#badge").style("display", context ? "inline-flex" : "none").text(context ? context[0] : "");
+      d3.select("#calendar-note").text(context ? context[1] : "This month is outside the four primary CMU travel periods.");
+      svg.select("#chart-desc").text(`${month}: ${data.map(d => `${d.gateway}, ${d.value}`).join("; ")}.`);
+    }
+
+    update("Aug");
+
+    function reportHeight() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: "shorthand:resize", height }, "*");
+      window.parent.postMessage({ type: "embed-size", height }, "*");
+    }
+    new ResizeObserver(reportHeight).observe(document.body);
+    window.addEventListener("load", reportHeight);
+  </script>
+</body>
+</html>
