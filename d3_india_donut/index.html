@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>India Service by Gateway — Interactive Donut</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root{--ink:#17202a;--muted:#66717d;--line:#e6e9ed;--wash:#f6f8fa;--accent:#c41230}
+    *{box-sizing:border-box}html,body{margin:0;background:transparent;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .card{width:100%;max-width:980px;margin:auto;padding:24px 26px 18px;background:#fff}h1{margin:0;font-size:clamp(24px,4vw,38px);line-height:1.08;letter-spacing:-.025em}.dek{max-width:790px;margin:10px 0 0;color:var(--muted);font-size:15px;line-height:1.45}
+    .layout{display:grid;grid-template-columns:minmax(300px,1.05fr) minmax(290px,.95fr);gap:26px;align-items:center;margin-top:14px}.chart{position:relative;min-width:0}svg{display:block;width:100%;height:auto;overflow:visible}.arc{cursor:pointer;stroke:#fff;stroke-width:3;transition:opacity .2s}.arc.muted{opacity:.2}.arc.focused{filter:drop-shadow(0 3px 5px #0003)}
+    .center-name{fill:var(--ink);font-size:20px;font-weight:800;text-anchor:middle}.center-value{fill:var(--accent);font-size:31px;font-weight:850;text-anchor:middle}.center-note{fill:var(--muted);font-size:12px;text-anchor:middle}
+    .panel{min-width:0}.control{margin-bottom:15px}label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.045em;text-transform:uppercase}select{width:100%;padding:9px 34px 9px 11px;border:1px solid #c9ced5;border-radius:7px;background:#fff;color:var(--ink);font:inherit;font-weight:650;cursor:pointer}
+    .legend{display:grid;gap:6px}.legend button{display:grid;grid-template-columns:13px 1fr auto;gap:9px;align-items:center;width:100%;padding:8px 9px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer}.legend button:hover,.legend button.active{border-color:#d5dae0;background:var(--wash)}.swatch{width:12px;height:12px;border-radius:50%}.gateway{font-size:13px;font-weight:700}.stat{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+    .insight{margin-top:14px;padding:13px 14px;border-left:4px solid var(--accent);border-radius:0 7px 7px 0;background:var(--wash);font-size:13px;line-height:1.45}.insight strong{color:var(--ink)}.source{margin:12px 0 0;color:#7a828c;font-size:11px;line-height:1.4}.tip{position:fixed;z-index:10;pointer-events:none;opacity:0;max-width:230px;padding:9px 11px;border-radius:7px;background:#17202a;color:#fff;font-size:12px;line-height:1.4;box-shadow:0 8px 24px #0002;transition:opacity .12s}.tip strong{display:block;margin-bottom:3px}
+    @media(max-width:650px){.card{padding:18px 14px 14px}.layout{grid-template-columns:1fr;gap:6px}.chart{max-width:390px;margin:auto}.center-name{font-size:17px}.center-value{font-size:27px}.panel{display:flex;flex-direction:column}.control{order:0}.legend{order:1}.insight{order:2}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>How is India service distributed across the five gateways?</h1>
+    <p class="dek">Share of 2,899 scheduled departures from India to five selected U.S. gateways with onward service to Pittsburgh in 2025.</p>
+    <div class="layout">
+      <div class="chart" id="chart"></div>
+      <div class="panel">
+        <div class="control"><label for="gateway">Explore a gateway</label><select id="gateway"><option value="all">All five gateways</option></select></div>
+        <div class="legend" id="legend" aria-label="Gateway shares"></div>
+        <div class="insight" id="insight" aria-live="polite"></div>
+      </div>
+    </div>
+    <p class="source">Source: U.S. Department of Transportation, Bureau of Transportation Statistics, T-100 Segment (All Carriers), 2025. Percentages describe only the five selected gateways.</p>
+  </main>
+  <div class="tip" id="tip"></div>
+<script>
+const data=[
+ {name:"New York–JFK",short:"JFK",value:1028,color:"#c41230"},
+ {name:"San Francisco",short:"SFO",value:804,color:"#2f6fce"},
+ {name:"Newark",short:"EWR",value:727,color:"#7a49c9"},
+ {name:"Chicago–O'Hare",short:"ORD",value:231,color:"#f28e2b"},
+ {name:"Washington–Dulles",short:"IAD",value:109,color:"#49a078"}
+];
+const total=d3.sum(data,d=>d.value),pct=d3.format(".1%"),fmt=d3.format(",");data.forEach(d=>d.share=d.value/total);
+const W=500,H=500,R=210,r=120,svg=d3.select("#chart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","title desc");
+svg.append("title").attr("id","title").text("Donut chart of India departures across five selected U.S. gateways");svg.append("desc").attr("id","desc").text("New York JFK has the largest share at 35.5 percent, followed by San Francisco and Newark.");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`),pie=d3.pie().sort(null).value(d=>d.value).padAngle(.012),arc=d3.arc().innerRadius(r).outerRadius(R).cornerRadius(4),arcHover=d3.arc().innerRadius(r-3).outerRadius(R+9).cornerRadius(5),tip=d3.select("#tip");let selected="all";
+const paths=g.selectAll("path").data(pie(data)).join("path").attr("class","arc").attr("fill",d=>d.data.color).attr("d",d3.arc().innerRadius(r).outerRadius(r)).attr("tabindex",0).attr("role","button").attr("aria-label",d=>`${d.data.name}: ${fmt(d.data.value)} departures, ${pct(d.data.share)}`).on("pointermove",(event,d)=>showTip(event,d.data)).on("pointerleave",()=>tip.style("opacity",0)).on("focus",(_,d)=>focus(d.data.name)).on("blur",()=>focus(selected)).on("click",(_,d)=>choose(selected===d.data.name?"all":d.data.name));
+paths.transition().duration(900).ease(d3.easeCubicOut).attrTween("d",function(d){const i=d3.interpolate({startAngle:0,endAngle:0},d);return t=>arc(i(t))});
+const center=g.append("g").attr("pointer-events","none");center.append("text").attr("class","center-name").attr("y",-24);center.append("text").attr("class","center-value").attr("y",13);center.append("text").attr("class","center-note").attr("y",38);
+const select=d3.select("#gateway");select.selectAll("option.gateway-option").data(data).join("option").attr("class","gateway-option").attr("value",d=>d.name).text(d=>d.name);select.on("change",e=>choose(e.target.value));
+const legend=d3.select("#legend").selectAll("button").data(data).join("button").attr("type","button").on("click",(_,d)=>choose(selected===d.name?"all":d.name));legend.append("span").attr("class","swatch").style("background",d=>d.color);legend.append("span").attr("class","gateway").text(d=>d.name);legend.append("span").attr("class","stat").text(d=>`${fmt(d.value)} · ${pct(d.share)}`);
+function showTip(event,d){tip.html(`<strong>${d.name}</strong>${fmt(d.value)} departures<br>${pct(d.share)} of the five-gateway total`).style("left",`${event.clientX+12}px`).style("top",`${event.clientY-18}px`).style("opacity",1)}
+function focus(name){paths.classed("muted",d=>name!=="all"&&d.data.name!==name).classed("focused",d=>name!=="all"&&d.data.name===name).transition().duration(220).attr("d",d=>name===d.data.name?arcHover(d):arc(d));legend.classed("active",d=>name===d.name);const d=data.find(x=>x.name===name);center.select(".center-name").text(d?d.short:"Five gateways");center.select(".center-value").text(d?pct(d.share):fmt(total));center.select(".center-note").text(d?`${fmt(d.value)} departures`:"total departures")}
+function choose(name){selected=name;select.property("value",name);focus(name);const d=data.find(x=>x.name===name);d3.select("#insight").html(d?`<strong>${d.name}</strong> received ${fmt(d.value)} departures from India, representing ${pct(d.share)} of service among the five selected gateways.`:`<strong>JFK received the largest share.</strong> Together, JFK, San Francisco and Newark accounted for ${pct((1028+804+727)/total)} of the selected gateways’ India service.`)}
+choose("all");
+function reportHeight(){const height=document.documentElement.scrollHeight;parent.postMessage({type:"shorthand:resize",height},"*");parent.postMessage({type:"embed-size",height},"*")}new ResizeObserver(reportHeight).observe(document.body);addEventListener("load",reportHeight);
+</script>
+</body>
+</html>
